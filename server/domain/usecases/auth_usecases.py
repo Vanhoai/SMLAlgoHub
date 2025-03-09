@@ -1,17 +1,20 @@
 from abc import ABC, abstractmethod
+from fastapi_camelcase import CamelModel
 from pydantic import BaseModel
 
 from server.core.types import string
+
 
 class SignInReq(BaseModel):
     email: string
     password: string
 
-class SignInResponse:
-    pass
+
+class SignInResponse(CamelModel):
+    access_token: string
+    refresh_token: string
+
 
 class AuthUseCase(ABC):
     @abstractmethod
-    def sign_in(self, req: SignInReq) -> SignInResponse:
-        pass
-    
+    def sign_in(self, req: SignInReq) -> SignInResponse: ...
