@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+
 from server.core.injectable import injectable
 
 router = APIRouter(
@@ -7,8 +8,11 @@ router = APIRouter(
 )
 
 @router.post("/sign-in")
-@injectable
-def sign_in():
+async def sign_in(req: Request):
+
+    client_host = req.client.host
+    print("client_host", client_host)
+
     return {
         "statusCode": 200,
         "message": "Sign in successfully",

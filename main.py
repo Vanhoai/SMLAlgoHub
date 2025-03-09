@@ -2,8 +2,10 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from server.adapters.primary.v1.routes import router as v1_routers
-from server.containers import JudgerContainer
-from server.database import JudgerDatabase
+
+from server.adapters.shared.middlewares.process_time_middleware import ProcessTimeMiddleware
+from server.containers import MLAlgoHubContainer
+from server.database import MLAlgoHubDatabase
 from server.configs import configs
 from server.di import singleton
 
@@ -15,8 +17,8 @@ class MLAlgoHubServer:
         self.app = FastAPI()
 
         # set database and container
-        self.container = JudgerContainer()
-        self.database = JudgerDatabase()
+        self.container = MLAlgoHubContainer()
+        self.database = MLAlgoHubDatabase()
 
         # cors
         if configs.BACKEND_CORS_ORIGINS:
@@ -27,6 +29,8 @@ class MLAlgoHubServer:
                 allow_methods=["*"],
                 allow_headers=["*"],
             )
+
+        self.app.add_middleware(ProcessTimeMiddleware, some_attribute="process_time")
 
         @self.app.get("/")
         async def root():

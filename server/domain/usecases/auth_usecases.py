@@ -1,7 +1,11 @@
 from abc import ABC, abstractmethod
+from pydantic import BaseModel
 
-class SignInReq:
-    pass
+from server.core.types import string
+
+class SignInReq(BaseModel):
+    email: string
+    password: string
 
 class SignInResponse:
     pass
