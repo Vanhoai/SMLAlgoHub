@@ -1,0 +1,11 @@
+fastapi==0.115.11
+dependency-injector==4.39.0
+starlette==0.46.1
+pydantic==2.9.2
+python-dotenv==1.0.1
+
+# logger
+loguru==0.7.3
+
+# odm mongodb
+beanie==1.27.0
