@@ -4,10 +4,10 @@ from starlette.middleware.cors import CORSMiddleware
 from server.adapters.primary.v1.routes import router as v1_routers
 
 from server.adapters.shared.middlewares.tracing_middleware import TracingMiddleware
-from server.containers import MLAlgoHubContainer
 from server.database import MLAlgoHubDatabase
-from server.configs import configs
 from server.di import singleton
+
+from server.core.configs import app_config, cors_config
 
 
 @singleton
@@ -18,13 +18,12 @@ class MLAlgoHubServer:
         self.app = FastAPI()
 
         # set database and container
-        self.container = MLAlgoHubContainer()
         self.database = MLAlgoHubDatabase()
 
         # middlewares
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=[str(origin) for origin in configs.BACKEND_CORS_ORIGINS],
+            allow_origins=[str(origin) for origin in cors_config.ALLOWED_ORIGINS],
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],

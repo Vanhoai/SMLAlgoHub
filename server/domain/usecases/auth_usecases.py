@@ -5,6 +5,10 @@ from pydantic import BaseModel
 from server.core.types import string
 
 
+class PushNotificationUseCase:
+    pass
+
+
 class SignInReq(BaseModel):
     email: string
     password: string

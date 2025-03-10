@@ -1,9 +1,12 @@
-from server.core.services import BaseService
+from server.domain.usecases.auth_usecases import (
+    AuthUseCase,
+    PushNotificationUseCase,
+    SignInReq,
+    SignInResponse,
+)
 
-from server.domain.usecases.auth_usecases import AuthUseCase, SignInReq, SignInResponse
 
-
-class AuthService(BaseService, AuthUseCase):
+class AuthService(AuthUseCase, PushNotificationUseCase):
     def sign_in(self, req: SignInReq) -> SignInResponse:
         print(req)
         return SignInResponse(

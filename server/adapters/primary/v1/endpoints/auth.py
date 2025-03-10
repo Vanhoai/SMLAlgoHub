@@ -1,9 +1,8 @@
 from typing import Annotated
 from fastapi import APIRouter, Request, Depends
-from dependency_injector.wiring import Provide, inject as injectable
+from dependency_injector.wiring import inject as injectable
 
 from server.domain.usecases.auth_usecases import SignInReq
-from server.containers import MLAlgoHubContainer
 from server.domain.services.auth_service import AuthService
 from server.core.https import HttpResponse
 from server.core.types import string
