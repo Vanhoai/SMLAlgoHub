@@ -8,7 +8,7 @@
 - Set up judger container for feature online judge
 - Write api blogs, accounts, courses, lessons, ...
 
-## 2025-02-15 - Pull Request [https://github.com/Vanhoai/SMLAlgoHub/pull/1]
+## March 11, 2025 - Pull Request [https://github.com/Vanhoai/SMLAlgoHub/pull/1]
 
 ### Added
 
