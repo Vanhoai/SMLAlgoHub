@@ -1,6 +1,4 @@
-from typing import Annotated
-from fastapi import APIRouter, Request, Depends
-from dependency_injector.wiring import inject as injectable
+from fastapi import APIRouter, Request, Depends, status
 
 from server.domain.usecases.auth_usecases import SignInReq
 from server.domain.services.auth_service import AuthService
@@ -15,8 +13,7 @@ router = APIRouter(
 )
 
 
-@router.post("/sign-in", response_model=HttpResponse)
-@injectable
+@router.post("/sign-in", response_model=HttpResponse, status_code=status.HTTP_200_OK)
 async def sign_in(
     req: Request,
     body: SignInReq,
