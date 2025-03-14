@@ -8,5 +8,4 @@ router = APIRouter()
 routes = [auth_router, accounts_router, tags_router]
 
 for route in routes:
-    route.tags = route.tags.append("v1")
     router.include_router(route)

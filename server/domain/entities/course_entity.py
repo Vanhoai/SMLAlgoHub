@@ -1,11 +1,10 @@
 from typing import Optional
-from beanie import Document
 from datetime import datetime
-
+from pydantic import BaseModel
 from server.core.types import string
 
 
-class CourseEntity(Document):
+class CourseEntity(BaseModel):
     author: string
     title: string
     total_lessons: int
@@ -15,5 +14,18 @@ class CourseEntity(Document):
     updated_at: datetime = datetime.now()
     deleted_at: Optional[datetime] = None
 
-    class Settings:
-        name = "courses"
+    @staticmethod
+    def new(
+        author: string,
+        title: string,
+        total_lessons: int,
+        total_learned: int,
+        total_exercises: int,
+    ):
+        return CourseEntity(
+            author=author,
+            title=title,
+            total_lessons=total_lessons,
+            total_learned=total_learned,
+            total_exercises=total_exercises
+        )

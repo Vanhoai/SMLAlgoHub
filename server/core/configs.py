@@ -14,7 +14,9 @@ class Configs(BaseSettings):
     CORS_ALLOWED_ORIGINS: string
     MAX_AGE: int = 3600
 
-    model_config = SettingsConfigDict(env_file=".env", extra="forbid")
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
+    model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 
 configs = Configs()
