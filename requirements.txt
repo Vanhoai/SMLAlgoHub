@@ -12,3 +12,10 @@ pymongo==4.11.2
 
 # serializable
 fastapi-camelcase==2.0.0
+
+# time
+pytz==2025.1
+
+# cloud
+cloudinary==1.42.2
+urllib3==1.26.6

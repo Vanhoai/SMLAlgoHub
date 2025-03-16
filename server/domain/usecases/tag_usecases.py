@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from pydantic.types import Tag
-from typing_extensions import Optional
 from fastapi_camelcase import CamelModel
 from typing import Tuple, List
 

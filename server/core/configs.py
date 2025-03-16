@@ -10,6 +10,11 @@ class Configs(BaseSettings):
     # Database
     MONGO_URI: string
 
+    # storage
+    CLOUDINARY_NAME: string
+    CLOUDINARY_API_KEY: string
+    CLOUDINARY_API_SECRET: string
+
     # Cors
     CORS_ALLOWED_ORIGINS: string
     MAX_AGE: int = 3600

@@ -4,9 +4,17 @@ from starlette.middleware.cors import CORSMiddleware
 
 from server.adapters.primary.v1.routes import router as v1_routers
 
+import cloudinary
 from server.adapters.shared.middlewares.tracing_middleware import TracingMiddleware
 from server.core.configs import configs
 from server.core.exceptions import ExceptionHandler
+
+config = cloudinary.config(
+    cloud_name=configs.CLOUDINARY_NAME,
+    api_key=configs.CLOUDINARY_API_KEY,
+    api_secret=configs.CLOUDINARY_API_SECRET,
+    secure=True
+)
 
 # init app
 app = FastAPI()

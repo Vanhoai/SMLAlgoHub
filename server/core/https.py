@@ -21,6 +21,10 @@ class Meta(CamelModel):
     total_page: int
     total_record: int
 
+    @staticmethod
+    def empty():
+        return Meta(page=1, page_size=30, total_page=1, total_record=0)
+
 class HttpPaginationResponse(CamelModel):
     status_code: int
     message: string

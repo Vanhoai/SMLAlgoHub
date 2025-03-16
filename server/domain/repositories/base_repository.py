@@ -9,8 +9,8 @@ from typing import (
     Any,
     Mapping,
     Tuple,
-    Union,
 )
+from server.core.helpers.time import TimeHelper
 from server.core.types import string
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -43,9 +43,7 @@ class BaseRepository(Generic[T]):
         *args: Mapping[str, Any],
     ) -> List[T]:
         docs = await self.collection.find(*args).to_list()
-        data = self._convert_entities(docs)
-
-        return data
+        return self._convert_entities(docs)
 
     async def find_pagination(
         self,
@@ -91,24 +89,16 @@ class BaseRepository(Generic[T]):
         else:
             update_data = data
 
-        for key, value in update_data.items():
-            if hasattr(entity, key) and key != "_id":
-                entity[key] = value
+        time = TimeHelper.utc_timezone()
+        update_data["updated_at"] = time
 
-        # remove attr id
-        delattr(entity, "_id")
-        time = datetime.utcnow()
-        entity["updated_at"] = time
-
-        print(entity)
-
-        # update data and updated_at
         await self.collection.update_one(
             {"_id": ObjectId(id)},
-            {"$set": entity.model_dump(exclude={"id"}, exclude_unset=True)}
+            {"$set": update_data}
         )
 
         entity["id"] = id
+        entity["updated_at"] = time
         return self.model.model_validate(entity)
 
     async def find_one(self, *args: Mapping[str, Any]) -> Optional[T]:
