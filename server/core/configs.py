@@ -15,6 +15,17 @@ class Configs(BaseSettings):
     CLOUDINARY_API_KEY: string
     CLOUDINARY_API_SECRET: string
 
+    # Firebase
+    FIREBASE_PROJECT_ID: string
+    PRIVATE_KEY_ID: string
+    FIREBASE_PRIVATE_KEY: string
+    FIREBASE_CLIENT_EMAIL: string
+    FIREBASE_CLIENT_ID: string
+    FIREBASE_AUTH_URI: string
+    FIREBASE_TOKEN_URI: string
+    AUTH_PROVIDER_X509_CERT_URL: string
+    CLIENT_X509_CERT_URL: string
+
     # Cors
     CORS_ALLOWED_ORIGINS: string
     MAX_AGE: int = 3600

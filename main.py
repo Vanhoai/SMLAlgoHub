@@ -11,7 +11,20 @@ from server.adapters.shared.middlewares.tracing_middleware import TracingMiddlew
 from server.core.configs import configs
 from server.core.exceptions import ExceptionHandler
 
-cred = credentials.Certificate("./service-account.json")
+cred = credentials.Certificate({ \
+        "type": "service_account", \
+        "project_id": configs.FIREBASE_PROJECT_ID, \
+        "private_key_id": configs.PRIVATE_KEY_ID, \
+        "private_key": configs.FIREBASE_PRIVATE_KEY.replace('\\n', '\n'), \
+        "client_email": configs.FIREBASE_CLIENT_EMAIL, \
+        "client_id": configs.FIREBASE_CLIENT_ID, \
+        "auth_uri": configs.FIREBASE_AUTH_URI, \
+        "token_uri": configs.FIREBASE_TOKEN_URI, \
+        "auth_provider_x509_cert_url": configs.AUTH_PROVIDER_X509_CERT_URL, \
+        "client_x509_cert_url": configs.CLIENT_X509_CERT_URL, \
+        "universe_domain": "googleapis.com"
+    })
+
 initialize_app(credential=cred)
 
 config = cloudinary.config(
