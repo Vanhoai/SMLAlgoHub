@@ -3,11 +3,13 @@ from fastapi import Depends
 from server.domain.repositories.account_repository import AccountRepository
 from server.domain.repositories.blog_repository import BlogRepository
 from server.domain.repositories.course_repository import CourseRepository
+from server.domain.repositories.problem_repository import ProblemRepository
 from server.domain.repositories.tag_repository import TagRepository
 from server.domain.services.auth_service import AuthService
 from server.domain.services.blog_service import BlogService
 from server.domain.services.course_service import CourseService
 from server.domain.services.account_service import AccountService
+from server.domain.services.problem_service import ProblemService
 from server.domain.services.tag_service import TagService
 
 async def account_repository() -> AccountRepository:
@@ -21,6 +23,9 @@ async def course_repository() -> CourseRepository:
 
 async def blog_repository() -> BlogRepository:
     return BlogRepository()
+
+async def problem_repository() -> ProblemRepository:
+    return ProblemRepository()
 
 async def account_service(
     account_repository: AccountRepository = Depends(account_repository),
@@ -46,3 +51,10 @@ async def blog_service(
     tag_repository: TagRepository = Depends(tag_repository),
 ) -> BlogService:
     return BlogService(blog_repository, account_repository, tag_repository)
+
+async def problem_service(
+    problem_repository: ProblemRepository = Depends(problem_repository),
+    account_repository: AccountRepository = Depends(account_repository),
+    tag_repository: TagRepository = Depends(tag_repository),
+) -> ProblemService:
+    return ProblemService(problem_repository, account_repository, tag_repository)

@@ -20,7 +20,6 @@ class ErrorCodes(Enum):
     BAD_REQUEST = "BAD_REQUEST"
     FILE_SIZE_EXCEEDED = "FILE_SIZE_EXCEEDED"
 
-
 class ExceptionHandler(Exception):
     def __init__(self, code: ErrorCodes, msg: str):
         self.code = code

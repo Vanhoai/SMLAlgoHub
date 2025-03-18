@@ -71,9 +71,22 @@ class BaseRepository(Generic[T]):
 
     async def create(self, entity: T) -> T:
         data = entity.model_dump(exclude={"id"}, exclude_unset=True)
+
+        # convert all properties to ObjectId if contain "_id"
+        # for key, value in data.items():
+        #     if "_id" in key:
+        #         data[key] = ObjectId(value)
+
+        print("data insert: ", data)
         result = await self.collection.insert_one(data)
 
         data["id"] = str(result.inserted_id)
+
+        # reverse all properties ObjectId to string
+        # for key, value in data.items():
+        #     if "_id" in key:
+        #         print(key)
+                # data[key] = str(value)
         return self.model.model_validate(data)
 
     async def update(self, id: string, data: Dict[str, Any]) -> Optional[T]:

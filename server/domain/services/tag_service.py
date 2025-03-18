@@ -1,6 +1,6 @@
 from bson import ObjectId
 from fastapi import Depends
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 from server.core.https import Meta
 from server.domain.usecases.tag_usecases import (
