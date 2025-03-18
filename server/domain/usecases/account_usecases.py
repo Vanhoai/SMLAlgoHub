@@ -25,3 +25,6 @@ class ManageAccountUseCase(ABC):
 
     @abstractmethod
     async def find_accounts(self, query: FindAccountsQuery) -> Tuple[List[AccountEntity], Meta]: ...
+
+    @abstractmethod
+    async def find_account_with_email(self, email: string) -> Optional[AccountEntity]: ...

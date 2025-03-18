@@ -2,8 +2,12 @@ from fastapi import Depends, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from server import dependencies
+from server.adapters.secondary.apis.firebase import OAuthClaims
+from server.adapters.shared.middlewares.auth_middleware import auth_middleware
+from server.adapters.shared.middlewares.role_middleware import role_middleware
 from server.core.exceptions import ErrorCodes, ExceptionHandler
 from server.core.https import HttpPaginationResponse, HttpResponse
+from server.domain.entities.role_entity import EnumRole
 from server.domain.services.blog_service import BlogService
 from server.domain.usecases.blog_usecases import CreateBlogReq, FindBlogWithOptionsQuery
 
@@ -19,6 +23,8 @@ router = APIRouter(
 @router.post("/")
 async def create_blog(
     body: CreateBlogReq,
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     blog_service: BlogService = Depends(dependencies.blog_service),
 ):
     try:
@@ -36,6 +42,8 @@ async def create_blog(
 @router.get("/")
 async def find_blogs(
     query: Annotated[FindBlogWithOptionsQuery, Query()],
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     blog_service: BlogService = Depends(dependencies.blog_service),
 ):
     try:

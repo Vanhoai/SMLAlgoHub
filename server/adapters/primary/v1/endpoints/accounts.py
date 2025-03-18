@@ -4,7 +4,10 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from server import dependencies
-from server.domain.entities.account_entity import AccountEntity
+from server.adapters.secondary.apis.firebase import OAuthClaims
+from server.adapters.shared.middlewares.auth_middleware import auth_middleware
+from server.adapters.shared.middlewares.role_middleware import role_middleware
+from server.domain.entities.role_entity import EnumRole
 from server.domain.usecases.account_usecases import CreateAccountReq, FindAccountsQuery
 from server.domain.services.account_service import AccountService
 from server.core.https import HttpPaginationResponse, HttpResponse
@@ -19,6 +22,8 @@ router = APIRouter(
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_accounts(
     query: Annotated[FindAccountsQuery, Query()],
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     account_service: AccountService = Depends(dependencies.account_service),
 ) -> JSONResponse:
     try:
@@ -34,11 +39,11 @@ async def get_accounts(
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
 
-
-
 @router.post("/", status_code=status.HTTP_200_OK, response_model=HttpResponse)
 async def create_account(
     body: CreateAccountReq,
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     account_service: AccountService = Depends(dependencies.account_service),
 ) -> HttpResponse:
     try:

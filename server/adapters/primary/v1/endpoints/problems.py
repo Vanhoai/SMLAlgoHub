@@ -4,8 +4,12 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from server import dependencies
+from server.adapters.secondary.apis.firebase import OAuthClaims
+from server.adapters.shared.middlewares.auth_middleware import auth_middleware
+from server.adapters.shared.middlewares.role_middleware import role_middleware
 from server.core.exceptions import ErrorCodes, ExceptionHandler
 from server.core.https import HttpPaginationResponse, HttpResponse
+from server.domain.entities.role_entity import EnumRole
 from server.domain.services.problem_service import ProblemService
 from server.domain.usecases.problem_usecases import CreateProblemReq, FindProblemsQuery, UpdateProblemReq
 from server.core.types import string
@@ -18,6 +22,8 @@ router = APIRouter(
 @router.post("/")
 async def create_problem(
     body: CreateProblemReq,
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     try:
@@ -34,8 +40,10 @@ async def create_problem(
 
 @router.put("/{id}")
 async def update_problem(
-    id: int,
+    id: string,
     body: UpdateProblemReq,
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     return {"message": "Problem updated"}
@@ -43,6 +51,8 @@ async def update_problem(
 @router.get("/")
 async def find_problems(
     query: Annotated[FindProblemsQuery, Query()],
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     try:
@@ -62,6 +72,8 @@ async def find_problems(
 @router.post("/fake")
 async def fake(
     body: CreateProblemReq,
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     await problem_service.fake(body)
@@ -70,6 +82,8 @@ async def fake(
 @router.get("/{id}")
 async def find_problem(
     id: string,
+    claims: OAuthClaims = Depends(auth_middleware),
+    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     try:

@@ -1,3 +1,4 @@
+import ast
 from typing import List, Optional, Tuple
 from bson import ObjectId
 from fastapi import Depends
@@ -13,7 +14,6 @@ from server.domain.repositories.account_repository import AccountRepository
 from server.domain.entities.account_entity import AccountEntity
 from server.core.types import string
 from server.core.exceptions import ErrorCodes, ExceptionHandler
-
 
 class AccountService(ManageAccountUseCase):
     def __init__(self, account_repository: AccountRepository = Depends()):
@@ -47,3 +47,6 @@ class AccountService(ManageAccountUseCase):
         )
 
         return response
+
+    async def find_account_with_email(self, email: string) -> Optional[AccountEntity]:
+        return await self.account_repository.find_one({"email": email})

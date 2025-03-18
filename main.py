@@ -1,13 +1,18 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+from firebase_admin import initialize_app, credentials
 
 from server.adapters.primary.v1.routes import router as v1_routers
 
 import cloudinary
+from server.adapters.shared.middlewares.rate_limit_middleware import RateLimitingMiddleware
 from server.adapters.shared.middlewares.tracing_middleware import TracingMiddleware
 from server.core.configs import configs
 from server.core.exceptions import ExceptionHandler
+
+cred = credentials.Certificate("service-account.json")
+initialize_app(credential=cred)
 
 config = cloudinary.config(
     cloud_name=configs.CLOUDINARY_NAME,
@@ -28,6 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(TracingMiddleware)
+app.add_middleware(RateLimitingMiddleware)
 
 # routes
 app.include_router(v1_routers, prefix="/api/v1")
