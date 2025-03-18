@@ -11,7 +11,7 @@ from server.adapters.shared.middlewares.tracing_middleware import TracingMiddlew
 from server.core.configs import configs
 from server.core.exceptions import ExceptionHandler
 
-cred = credentials.Certificate("service-account.json")
+cred = credentials.Certificate("./service-account.json")
 initialize_app(credential=cred)
 
 config = cloudinary.config(
