@@ -1,15 +1,24 @@
 fastapi==0.115.11
-dependency-injector==4.39.0
 starlette==0.46.1
-pydantic==2.9.2
+pydantic==2.10.6
 pydantic-settings==2.8.1
 python-dotenv==1.0.1
 
 # logger
 loguru==0.7.3
 
-# odm mongodb
-beanie==1.27.0
+#  mongodb
+pymongo==4.11.2
 
 # serializable
 fastapi-camelcase==2.0.0
+
+# time
+pytz==2025.1
+
+# cloud
+cloudinary==1.42.2
+urllib3==1.26.6
+motor==3.7.0
+python-multipart==0.0.20
+firebase-admin==6.7.0

@@ -1,35 +1,41 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-from beanie import init_beanie
-from motor.motor_asyncio import AsyncIOMotorClient
+from firebase_admin import initialize_app, credentials
 
 from server.adapters.primary.v1.routes import router as v1_routers
 
+import cloudinary
+from server.adapters.shared.middlewares.rate_limit_middleware import RateLimitingMiddleware
 from server.adapters.shared.middlewares.tracing_middleware import TracingMiddleware
-from server.database import MLAlgoHubDatabase
 from server.core.configs import configs
 from server.core.exceptions import ExceptionHandler
 
-from server.domain.entities.account_entity import AccountEntity
-from server.domain.entities.tag_entity import TagEntity
+cred = credentials.Certificate({ \
+        "type": "service_account", \
+        "project_id": configs.FIREBASE_PROJECT_ID, \
+        "private_key_id": configs.PRIVATE_KEY_ID, \
+        "private_key": configs.FIREBASE_PRIVATE_KEY.replace('\\n', '\n'), \
+        "client_email": configs.FIREBASE_CLIENT_EMAIL, \
+        "client_id": configs.FIREBASE_CLIENT_ID, \
+        "auth_uri": configs.FIREBASE_AUTH_URI, \
+        "token_uri": configs.FIREBASE_TOKEN_URI, \
+        "auth_provider_x509_cert_url": configs.AUTH_PROVIDER_X509_CERT_URL, \
+        "client_x509_cert_url": configs.CLIENT_X509_CERT_URL, \
+        "universe_domain": "googleapis.com"
+    })
 
+initialize_app(credential=cred)
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):  # type: ignore
-    app.db = AsyncIOMotorClient(configs.MONGO_URI).MLAlgoHub  # type: ignore[attr-defined]
-    await init_beanie(app.db, document_models=[AccountEntity, TagEntity])  # type: ignore[arg-type,attr-defined]
-    print("Connected to database ✅")
-    yield
-    print("Shutdown complete ✅")
-
+config = cloudinary.config(
+    cloud_name=configs.CLOUDINARY_NAME,
+    api_key=configs.CLOUDINARY_API_KEY,
+    api_secret=configs.CLOUDINARY_API_SECRET,
+    secure=True
+)
 
 # init app
-app = FastAPI(lifespan=lifespan)
-
-# set database and container
-database = MLAlgoHubDatabase()
+app = FastAPI()
 
 # middlewares
 app.add_middleware(
@@ -40,10 +46,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(TracingMiddleware)
+app.add_middleware(RateLimitingMiddleware)
 
 # routes
 app.include_router(v1_routers, prefix="/api/v1")
-
 
 # exception
 @app.exception_handler(ExceptionHandler)

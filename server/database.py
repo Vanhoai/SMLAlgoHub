@@ -1,6 +1,4 @@
-from contextlib import contextmanager
+from motor.motor_asyncio import AsyncIOMotorClient
+from server.core.configs import configs
 
-
-class MLAlgoHubDatabase:
-    def __init__(self):
-        pass
+client = AsyncIOMotorClient(configs.MONGO_URI).MLAlgoHub  # type: ignore[attr-defined]

@@ -18,7 +18,7 @@ class ErrorCodes(Enum):
     CONFLICT = "CONFLICT"
     INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
     BAD_REQUEST = "BAD_REQUEST"
-
+    FILE_SIZE_EXCEEDED = "FILE_SIZE_EXCEEDED"
 
 class ExceptionHandler(Exception):
     def __init__(self, code: ErrorCodes, msg: str):
