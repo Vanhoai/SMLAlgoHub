@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+    rabbit:
+        image: rabbitmq:4.0-management
+        restart: always
+        env_file:
+            - .env.dev
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        healthcheck:
+            test: ["CMD", "rabbitmqctl", "status"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+
+    redis:
+        image: redis:7.4.2-alpine
+        restart: always
+        ports:
+            - "6379:6379"
+        # add volumne here
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5

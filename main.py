@@ -2,7 +2,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 from firebase_admin import initialize_app, credentials
+from contextlib import asynccontextmanager
 
+from server.rabbitmq_connection import rabbitmq_connection
 from server.adapters.primary.v1.routes import router as v1_routers
 
 import cloudinary
@@ -34,8 +36,14 @@ config = cloudinary.config(
     secure=True
 )
 
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    await rabbitmq_connection.connect()
+    yield
+    await rabbitmq_connection.disconnect()
+
 # init app
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 # middlewares
 app.add_middleware(
