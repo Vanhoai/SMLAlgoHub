@@ -4,39 +4,45 @@
 
 ## 📚 Overview
 
-SMLAlgoHub là một nền tảng toàn diện được thiết kế để chia sẻ kiến ​​thức thuật toán và cung cấp một môi trường lập trình cạnh tranh. Nền tảng này cung cấp các nguồn tài nguyên giáo dục bao gồm nhiều khái niệm thuật toán khác nhau, cùng với một hệ thống đánh giá tích hợp cho phép người dùng gửi các giải pháp cho các vấn đề lập trình ở nhiều cấp độ và danh mục khó khăn.
+SMLAlgoHub is a comprehensive platform designed to share algorithmic knowledge and provide a competitive programming environment. The platform offers educational resources covering various algorithmic concepts, along with an integrated judging system that allows users to submit solutions to programming problems across multiple difficulty levels and categories.
 
-Dự án này nhằm mục đích tạo ra một hệ sinh thái do cộng đồng thúc đẩy, nơi các lập trình viên có thể học hỏi, thực hành và cạnh tranh để cải thiện tư duy thuật toán và kỹ năng giải quyết vấn đề của họ.
+The project aims to create a community-driven ecosystem where programmers can learn, practice, and compete to improve their algorithmic thinking and problem-solving skills.
 
 ## ✨ Features
 
 ### 📖 Educational Resources
 
-- Hướng dẫn và giải thích toàn diện về các thuật toán và cấu trúc dữ liệu phổ biến
-- Biểu diễn trực quan và hướng dẫn từng bước cho các khái niệm thuật toán phức tạp
-- Nhiều cấp độ khó để phù hợp với người học từ người mới bắt đầu đến nâng cao
-- Các ứng dụng thực tế và ví dụ thực tế về thuật toán
+- Comprehensive tutorials and explanations of common algorithms and data structures
+- Visual representations and step-by-step guides for complex algorithmic concepts
+- Multiple difficulty levels to accommodate learners from beginners to advanced
+- Practical applications and real-world examples of algorithms
 
 ### 💻 Problem Repository
 
-- Bộ sưu tập đa dạng các bài toán lập trình thuộc nhiều danh mục khác nhau
-- Các bài toán được gắn thẻ để dễ dàng lọc và tìm kiếm
-- Nhiều mức độ khó để học tập tiến bộ
-- Mô tả bài toán chi tiết với thông số kỹ thuật đầu vào/đầu ra
+- Diverse collection of programming problems across various categories
+- Tagged problems for easy filtering and search
+- Multiple difficulty levels for progressive learning
+- Detailed problem descriptions with input/output specifications
 
 ### ⚖️ Judging System
 
-- Đánh giá tự động các giải pháp đã gửi
-- Phản hồi thời gian thực về tính chính xác và hiệu quả của mã
-- Hỗ trợ nhiều ngôn ngữ lập trình
-- Các trường hợp thử nghiệm toàn diện để xác minh kỹ lưỡng
+- Automated evaluation of submitted solutions
+- Real-time feedback on code correctness and efficiency
+- Support for multiple programming languages
+- Comprehensive test cases for thorough verification
 
 ### 👤 User Experience
 
-- Hệ thống xếp hạng người dùng dựa trên các vấn đề đã giải quyết và các cuộc thi
-- Lộ trình học tập được cá nhân hóa và các vấn đề được đề xuất
-- Theo dõi tiến trình và phân tích hiệu suất
-- Các tính năng xã hội để tương tác cộng đồng và chia sẻ kiến ​​thức
+- User ranking system based on solved problems and competitions
+- Personalized learning paths and recommended problems
+- Progress tracking and performance analytics
+- Social features for community interaction and knowledge sharing
+
+### 🔧 Administrative Tools
+
+- Comprehensive APIs for managing problems, tags, and user accounts
+- Robust authentication and authorization system
+- Analytics dashboard for monitoring platform usage and performance
 
 ## 🛠️ Technologies
 
@@ -53,7 +59,13 @@ Dự án này nhằm mục đích tạo ra một hệ sinh thái do cộng đồ
 - Domain-Driven Design (DDD) architecture with simplified domain layer
 - RESTful API design principles
 - Containerized deployment using Docker
-- Monolithic architecture
+- Microservices approach for scalability
+
+### DevOps
+
+- Docker for containerization and deployment
+- Koyeb for hosting and scaling
+- GitHub Actions for CI/CD pipeline
 
 ## 🚀 Getting Started
 
