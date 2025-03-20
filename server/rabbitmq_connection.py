@@ -37,10 +37,10 @@ class RabbitMQConnection:
         await self._clear()
 
     async def send_messages(
-            self,
-            messages: string,
-            routing_key: str = RABBITMQ_QUEUE
-        ) -> None:
+        self,
+        messages: string,
+        routing_key: str = RABBITMQ_QUEUE
+    ) -> None:
         if not self.channel:
             raise RuntimeError("Not connected")
 

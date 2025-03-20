@@ -1,3 +1,4 @@
+import cloudinary
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
@@ -5,30 +6,32 @@ from firebase_admin import initialize_app, credentials
 from contextlib import asynccontextmanager
 
 from server.rabbitmq_connection import rabbitmq_connection
+from server.redis_connection import redis_connection
 from server.adapters.primary.v1.routes import router as v1_routers
 
-import cloudinary
 from server.adapters.shared.middlewares.rate_limit_middleware import RateLimitingMiddleware
 from server.adapters.shared.middlewares.tracing_middleware import TracingMiddleware
 from server.core.configs import configs
 from server.core.exceptions import ExceptionHandler
 
 cred = credentials.Certificate({ \
-        "type": "service_account", \
-        "project_id": configs.FIREBASE_PROJECT_ID, \
-        "private_key_id": configs.PRIVATE_KEY_ID, \
-        "private_key": configs.FIREBASE_PRIVATE_KEY.replace('\\n', '\n'), \
-        "client_email": configs.FIREBASE_CLIENT_EMAIL, \
-        "client_id": configs.FIREBASE_CLIENT_ID, \
-        "auth_uri": configs.FIREBASE_AUTH_URI, \
-        "token_uri": configs.FIREBASE_TOKEN_URI, \
-        "auth_provider_x509_cert_url": configs.AUTH_PROVIDER_X509_CERT_URL, \
-        "client_x509_cert_url": configs.CLIENT_X509_CERT_URL, \
-        "universe_domain": "googleapis.com"
-    })
+    "type": "service_account", \
+    "project_id": configs.FIREBASE_PROJECT_ID, \
+    "private_key_id": configs.PRIVATE_KEY_ID, \
+    "private_key": configs.FIREBASE_PRIVATE_KEY.replace('\\n', '\n'), \
+    "client_email": configs.FIREBASE_CLIENT_EMAIL, \
+    "client_id": configs.FIREBASE_CLIENT_ID, \
+    "auth_uri": configs.FIREBASE_AUTH_URI, \
+    "token_uri": configs.FIREBASE_TOKEN_URI, \
+    "auth_provider_x509_cert_url": configs.AUTH_PROVIDER_X509_CERT_URL, \
+    "client_x509_cert_url": configs.CLIENT_X509_CERT_URL, \
+    "universe_domain": "googleapis.com"
+})
 
+# init firebase
 initialize_app(credential=cred)
 
+# init cloudinary
 config = cloudinary.config(
     cloud_name=configs.CLOUDINARY_NAME,
     api_key=configs.CLOUDINARY_API_KEY,
@@ -36,11 +39,14 @@ config = cloudinary.config(
     secure=True
 )
 
+# connect rabbitmq and redis
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await rabbitmq_connection.connect()
+    await redis_connection.connect()
     yield
     await rabbitmq_connection.disconnect()
+    await redis_connection.disconnect()
 
 # init app
 app = FastAPI(lifespan=lifespan)

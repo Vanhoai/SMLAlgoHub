@@ -8,8 +8,10 @@ uvicorn==0.34.0
 # logger
 loguru==0.7.3
 
-#  mongodb
+# storage
 pymongo==4.11.2
+redis==5.2.1
+cloudinary==1.42.2
 
 # serializable
 fastapi-camelcase==2.0.0
@@ -17,13 +19,14 @@ fastapi-camelcase==2.0.0
 # time
 pytz==2025.1
 
-# cloud
-cloudinary==1.42.2
+# utils
 urllib3==1.26.6
 motor==3.7.0
 python-multipart==0.0.20
+
+# apis
+judge0==0.0.3
 firebase-admin==6.7.0
 
-# judge
-judge0==0.0.3
+# rabbitmq
 aio-pika==9.5.5
