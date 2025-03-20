@@ -23,7 +23,7 @@ router = APIRouter(
 async def get_accounts(
     query: Annotated[FindAccountsQuery, Query()],
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _ = Depends(role_middleware(required=[])),
     account_service: AccountService = Depends(dependencies.account_service),
 ) -> JSONResponse:
     try:

@@ -38,6 +38,20 @@ class BaseRepository(Generic[T]):
     def _convert_entities(self, docs: List[Dict[str, Any]]) -> List[T]:
         return [self._convert_doc(doc) for doc in docs]
 
+    async def process_create(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        for key, value in data.items():
+            if "_id" in key:
+                data[key] = ObjectId(value)
+
+        result = await self.collection.insert_one(data)
+        data["id"] = string(result.inserted_id)
+
+        for key, value in data.items():
+            if ObjectId.is_valid(value):
+                data[key] = string(value)
+
+        return data
+
     async def find_with_options(
         self,
         *args: Mapping[str, Any],
@@ -121,6 +135,13 @@ class BaseRepository(Generic[T]):
 
         response["id"] = str(response["_id"])
         return self.model.model_validate(response)
+
+    async def collection_find(self, *args: Mapping[str, Any]) -> Optional[T]:
+        response = await self.collection.find_one(*args)
+        if response is None:
+            return None
+
+        return response
 
     async def delete(self, id: Any) -> Optional[T]:
         doc = await self.collection.find_one({"_id":  ObjectId(id)})

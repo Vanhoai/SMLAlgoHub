@@ -14,8 +14,9 @@ __pycache__
 
 #vscode
 /.vscode/
-
+.ropeproject
 /venv/
+/.venv/
 /env/
 
 # node

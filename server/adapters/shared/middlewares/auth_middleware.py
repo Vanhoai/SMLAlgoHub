@@ -7,6 +7,9 @@ from server.domain.entities.account_entity import AccountEntity
 from server.domain.services.account_service import AccountService
 
 async def require_token(req: Request) -> OAuthClaims:
+    if not req.headers["Authorization"]:
+        raise ExceptionHandler(code=ErrorCodes.UNAUTHORIZED, msg="Authorization header is missing.")
+
     authorization = req.headers["Authorization"]
     strs = authorization.split(" ")
     if len(strs) != 2:
@@ -37,4 +40,4 @@ async def auth_middleware(
         req.state.account = account
         return account
     except Exception as exception:
-        raise ExceptionHandler(code=ErrorCodes.UNAUTHORIZED, msg=str(exception))
+        raise ExceptionHandler(code=ErrorCodes.UNAUTHORIZED, msg=f"Unauthorized: {exception}")
