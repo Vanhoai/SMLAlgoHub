@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi import Request, status
 from starlette.middleware.base import BaseHTTPMiddleware
 
+
 class RateLimitingMiddleware(BaseHTTPMiddleware):
     # Rate limiting configurations
     RATE_LIMIT_DURATION = timedelta(minutes=1)
@@ -18,7 +19,9 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host
 
         # Check if IP is already present in request_counts
-        request_count, last_request = self.request_counts.get(client_ip, (0, datetime.min))
+        request_count, last_request = self.request_counts.get(
+            client_ip, (0, datetime.min)
+        )
 
         # Calculate the time elapsed since the last request
         elapsed_time = datetime.now() - last_request
@@ -33,8 +36,8 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
                     status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                     content={
                         "statusCode": status.HTTP_429_TOO_MANY_REQUESTS,
-                        "message": "Rate limit exceeded. Please try again later."
-                    }
+                        "message": "Rate limit exceeded. Please try again later.",
+                    },
                 )
             request_count += 1
 

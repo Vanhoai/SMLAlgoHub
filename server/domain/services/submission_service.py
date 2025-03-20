@@ -2,20 +2,29 @@ from bson import ObjectId
 from server.domain.repositories.account_repository import AccountRepository
 from server.domain.repositories.problem_repository import ProblemRepository
 from typing import List, Tuple
-
 from fastapi import Depends
+
 from server.core.https import Meta
-from server.domain.entities.submission_entity import SubmissionEntity, SubmissionLanguages, SubmissionStatus
+from server.domain.entities.submission_entity import (
+    SubmissionEntity,
+    SubmissionLanguages,
+    SubmissionStatus,
+)
 from server.domain.repositories.submission_repository import SubmissionRepository
-from server.domain.usecases.submission_usecases import CreateSubmissionReq, FindSubmissionsQuery, ManageSubmissionUseCases
+from server.domain.usecases.submission_usecases import (
+    CreateSubmissionReq,
+    FindSubmissionsQuery,
+    ManageSubmissionUseCases,
+)
 from server.core.exceptions import ErrorCodes, ExceptionHandler
+
 
 class SubmissionService(ManageSubmissionUseCases):
     def __init__(
         self,
         submission_repository: SubmissionRepository = Depends(),
         problem_repository: ProblemRepository = Depends(),
-        account_repository: AccountRepository = Depends()
+        account_repository: AccountRepository = Depends(),
     ):
         self.submission_repository = submission_repository
         self.problem_repository = problem_repository
@@ -24,20 +33,30 @@ class SubmissionService(ManageSubmissionUseCases):
     async def create_submission(self, req: CreateSubmissionReq) -> SubmissionEntity:
         # validate data
         if not ObjectId.is_valid(req.author_id):
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid author ID.")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid author ID."
+            )
 
         if not ObjectId.is_valid(req.problem_id):
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID.")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID."
+            )
 
         if req.language not in SubmissionLanguages:
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid language.")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid language."
+            )
 
         # validate database
-        account = await self.account_repository.find_one({"_id": ObjectId(req.author_id)})
+        account = await self.account_repository.find_one(
+            {"_id": ObjectId(req.author_id)}
+        )
         if not account:
             raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Account not found.")
 
-        problem = await self.problem_repository.collection_find({"_id": ObjectId(req.problem_id)})
+        problem = await self.problem_repository.collection_find(
+            {"_id": ObjectId(req.problem_id)}
+        )
         if not problem:
             raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Problem not found.")
 
@@ -57,5 +76,7 @@ class SubmissionService(ManageSubmissionUseCases):
 
         return await self.submission_repository.create_submission(entity)
 
-    async def find_submissions(self, req: FindSubmissionsQuery) -> Tuple[List[SubmissionEntity], Meta]:
+    async def find_submissions(
+        self, req: FindSubmissionsQuery
+    ) -> Tuple[List[SubmissionEntity], Meta]:
         return [], Meta.empty()

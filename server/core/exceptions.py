@@ -2,10 +2,6 @@ from enum import Enum
 
 
 class ErrorCodes(Enum):
-    """
-    Error codes for business exceptions
-    """
-
     UNAUTHORIZED = "UNAUTHORIZED"
     ALREADY_EXISTS = "ALREADY_EXISTS"
     MESSAGE_SAVE_ERROR = "MESSAGE_SAVE_ERROR"
@@ -19,6 +15,7 @@ class ErrorCodes(Enum):
     INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
     BAD_REQUEST = "BAD_REQUEST"
     FILE_SIZE_EXCEEDED = "FILE_SIZE_EXCEEDED"
+
 
 class ExceptionHandler(Exception):
     def __init__(self, code: ErrorCodes, msg: str):

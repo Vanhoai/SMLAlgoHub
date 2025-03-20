@@ -19,64 +19,77 @@ router = APIRouter(
     tags=["tags"],
 )
 
+
 @router.put("/{id}")
 async def update_tag(
     id: string,
     body: UpdateTagReq,
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     tag_service: TagService = Depends(dependencies.tag_service),
 ):
     try:
         response = await tag_service.update_tag(id, body)
-        return HttpResponse(status_code=status.HTTP_200_OK, message="success", data=response)
+        return HttpResponse(
+            status_code=status.HTTP_200_OK, message="success", data=response
+        )
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
+
 
 @router.delete("/{id}")
 async def delete_tag(
     id: string,
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     tag_service: TagService = Depends(dependencies.tag_service),
 ):
     try:
         response = await tag_service.delete_tag(id)
-        return HttpResponse(status_code=status.HTTP_200_OK, message="success", data=response)
+        return HttpResponse(
+            status_code=status.HTTP_200_OK, message="success", data=response
+        )
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
+
 
 @router.post("/")
 async def create_tag(
     body: CreateTagReq,
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     tag_service: TagService = Depends(dependencies.tag_service),
 ):
     try:
         response = await tag_service.create_tag(body)
-        return HttpResponse(status_code=status.HTTP_200_OK, message="success", data=response)
+        return HttpResponse(
+            status_code=status.HTTP_200_OK, message="success", data=response
+        )
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
+
 
 @router.get("/{id}")
 async def get_tag(
     id: str,
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     tag_service: TagService = Depends(dependencies.tag_service),
 ):
     try:
         response = await tag_service.get_tag(id)
-        return HttpResponse(status_code=status.HTTP_200_OK, message="success", data=response)
+        return HttpResponse(
+            status_code=status.HTTP_200_OK, message="success", data=response
+        )
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
+
 
 @router.get("/")
 async def find_tags(
     query: Annotated[BaseQuery, Query()],
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     tag_service: TagService = Depends(dependencies.tag_service),
 ) -> JSONResponse:
     try:

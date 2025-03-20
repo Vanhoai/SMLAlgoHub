@@ -1,17 +1,26 @@
-from server.core.exceptions import ErrorCodes, ExceptionHandler
-from server.core.types import string
 from typing import List, Tuple
-
 from bson import ObjectId
 from fastapi import Depends
+
+from server.core.exceptions import ErrorCodes, ExceptionHandler
+from server.core.types import string
 from server.core.https import Meta
-from server.domain.aggregates.problem_aggregate import ProblemAggregate, ProblemAggregateDetail
+from server.domain.aggregates.problem_aggregate import (
+    ProblemAggregate,
+    ProblemAggregateDetail,
+)
 from server.domain.entities.problem_entity import IOMode, ProblemEntity, ProblemLevel
 from server.domain.repositories.account_repository import AccountRepository
 from server.domain.repositories.problem_repository import ProblemRepository
 from server.domain.repositories.tag_repository import TagRepository
-from server.domain.usecases.problem_usecases import CreateProblemReq, FindProblemsQuery, ManageProblemUseCases, UpdateProblemReq
+from server.domain.usecases.problem_usecases import (
+    CreateProblemReq,
+    FindProblemsQuery,
+    ManageProblemUseCases,
+    UpdateProblemReq,
+)
 import random
+
 
 class ProblemService(ManageProblemUseCases):
     def __init__(
@@ -26,16 +35,24 @@ class ProblemService(ManageProblemUseCases):
 
     async def create_problem(self, req: CreateProblemReq) -> ProblemEntity:
         if not ObjectId.is_valid(req.author_id):
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid author ID")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid author ID"
+            )
 
         if not req.tags or len(req.tags) <= 0:
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide at least one tag")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide at least one tag"
+            )
 
         if req.level not in ProblemLevel:
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid level")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid level"
+            )
 
         if req.io_mode not in IOMode:
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid io mode")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid io mode"
+            )
 
         # check valid in database
         tags_query = [ObjectId(tag) for tag in req.tags]
@@ -43,13 +60,17 @@ class ProblemService(ManageProblemUseCases):
         if len(tags) != len(req.tags):
             raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Some tags not found")
 
-        author = await self.account_repository.find_one({ "_id": ObjectId(req.author_id) })
+        author = await self.account_repository.find_one(
+            {"_id": ObjectId(req.author_id)}
+        )
         if not author:
             raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Author not found")
 
-        problem = await self.problem_repository.find_one({ "title": req.title })
+        problem = await self.problem_repository.find_one({"title": req.title})
         if problem:
-            raise ExceptionHandler(code=ErrorCodes.CONFLICT, msg="Problem already exists")
+            raise ExceptionHandler(
+                code=ErrorCodes.CONFLICT, msg="Problem already exists"
+            )
 
         entity = ProblemEntity.new(
             author_id=req.author_id,
@@ -67,14 +88,16 @@ class ProblemService(ManageProblemUseCases):
             note=req.note,
             tags=req.tags,
             io_mode=req.io_mode,
-            level=req.level
+            level=req.level,
         )
 
         return await self.problem_repository.create(entity)
 
     async def update_problem(self, id: string, req: UpdateProblemReq) -> ProblemEntity:
         if not ObjectId.is_valid(id):
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID"
+            )
 
         problem = await self.problem_repository.find_one({"_id": ObjectId(id)})
         if not problem:
@@ -82,17 +105,23 @@ class ProblemService(ManageProblemUseCases):
 
         response = await self.problem_repository.update(id, req.dict())
         if not response:
-            raise ExceptionHandler(code=ErrorCodes.INTERNAL_SERVER_ERROR, msg="Failed to update problem")
+            raise ExceptionHandler(
+                code=ErrorCodes.INTERNAL_SERVER_ERROR, msg="Failed to update problem"
+            )
 
         return response
 
-    async def find_problems(self, query: FindProblemsQuery) -> Tuple[List[ProblemAggregate], Meta]:
+    async def find_problems(
+        self, query: FindProblemsQuery
+    ) -> Tuple[List[ProblemAggregate], Meta]:
         response = await self.problem_repository.find_problems_pagination(query)
         return response
 
     async def find_problem(self, id: string) -> ProblemAggregateDetail:
         if not ObjectId.is_valid(id):
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID"
+            )
 
         problem = await self.problem_repository.find_problem(id)
         if not problem:
@@ -102,7 +131,9 @@ class ProblemService(ManageProblemUseCases):
 
     async def delete_problem(self, id: string) -> ProblemEntity:
         if not ObjectId.is_valid(id):
-            raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID")
+            raise ExceptionHandler(
+                code=ErrorCodes.BAD_REQUEST, msg="Please provide a valid problem ID"
+            )
 
         problem = await self.problem_repository.delete(id)
         if not problem:
@@ -119,7 +150,15 @@ class ProblemService(ManageProblemUseCases):
         authors = await self.account_repository.find_with_options({})
 
         count = 0
-        names = ["Count Island", "Move in Matrix", "Count Connected Components", "Find First Missing Positive", "Count Substrings", "Find First Unique Character", "Find First Non-Repeating Character"]
+        names = [
+            "Count Island",
+            "Move in Matrix",
+            "Count Connected Components",
+            "Find First Missing Positive",
+            "Count Substrings",
+            "Find First Unique Character",
+            "Find First Non-Repeating Character",
+        ]
 
         for i in range(20):
             # pick a random author
@@ -129,12 +168,23 @@ class ProblemService(ManageProblemUseCases):
             author_id = str(author_random.id)
 
             # pick some tags
-            tags_id = [tag.id for tag in random.sample(tags, random.randint(1, 5)) if tag and tag.id]
+            tags_id = [
+                tag.id
+                for tag in random.sample(tags, random.randint(1, 5))
+                if tag and tag.id
+            ]
             if not tags_id:
                 continue
 
             # pick a level
-            level = random.choice([ProblemLevel.BEGINNER, ProblemLevel.EASY, ProblemLevel.MEDIUM, ProblemLevel.HARD])
+            level = random.choice(
+                [
+                    ProblemLevel.BEGINNER,
+                    ProblemLevel.EASY,
+                    ProblemLevel.MEDIUM,
+                    ProblemLevel.HARD,
+                ]
+            )
 
             # pick a io mode
             io_mode = random.choice([IOMode.STANDARD_IO, IOMode.FILE_IO])
@@ -158,7 +208,7 @@ class ProblemService(ManageProblemUseCases):
                 note=req.note,
                 tags=tags_id,
                 io_mode=io_mode,
-                level=level
+                level=level,
             )
 
             response = await self.problem_repository.create_problem(entity)

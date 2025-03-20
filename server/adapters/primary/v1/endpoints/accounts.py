@@ -19,11 +19,12 @@ router = APIRouter(
     tags=["accounts"],
 )
 
+
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_accounts(
     query: Annotated[FindAccountsQuery, Query()],
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[])),
+    _=Depends(role_middleware(required=[])),
     account_service: AccountService = Depends(dependencies.account_service),
 ) -> JSONResponse:
     try:
@@ -39,11 +40,12 @@ async def get_accounts(
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
 
+
 @router.post("/", status_code=status.HTTP_200_OK, response_model=HttpResponse)
 async def create_account(
     body: CreateAccountReq,
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     account_service: AccountService = Depends(dependencies.account_service),
 ) -> HttpResponse:
     try:

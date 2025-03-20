@@ -20,11 +20,12 @@ router = APIRouter(
     tags=["blogs"],
 )
 
+
 @router.post("/")
 async def create_blog(
     body: CreateBlogReq,
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     blog_service: BlogService = Depends(dependencies.blog_service),
 ):
     try:
@@ -39,11 +40,12 @@ async def create_blog(
     except Exception as exception:
         raise ExceptionHandler(code=ErrorCodes.BAD_REQUEST, msg=string(exception))
 
+
 @router.get("/")
 async def find_blogs(
     query: Annotated[FindBlogWithOptionsQuery, Query()],
     claims: OAuthClaims = Depends(auth_middleware),
-    _ = Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
     blog_service: BlogService = Depends(dependencies.blog_service),
 ):
     try:

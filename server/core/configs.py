@@ -35,4 +35,5 @@ class Configs(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 
+
 configs = Configs()

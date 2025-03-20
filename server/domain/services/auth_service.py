@@ -9,6 +9,7 @@ from server.domain.usecases.auth_usecases import (
 )
 from firebase_admin import auth
 
+
 class AuthService(AuthUseCase, PushNotificationUseCase):
     def __init__(self, account_repository: AccountRepository = Depends()):
         self.account_repository = account_repository
@@ -18,7 +19,7 @@ class AuthService(AuthUseCase, PushNotificationUseCase):
         model = OAuthClaims.validate(claims)
 
         # check account exist -> if not -> create new account
-        account = await self.account_repository.find_one({ "email": model.email })
+        account = await self.account_repository.find_one({"email": model.email})
         if not account:
             entity = AccountEntity.new(
                 username=model.name,

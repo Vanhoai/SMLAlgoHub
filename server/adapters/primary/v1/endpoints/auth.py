@@ -12,6 +12,7 @@ router = APIRouter(
     tags=["auth"],
 )
 
+
 @router.post("/oauth")
 async def oauth(
     req: Request,

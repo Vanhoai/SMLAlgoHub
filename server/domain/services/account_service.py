@@ -15,6 +15,7 @@ from server.domain.entities.account_entity import AccountEntity
 from server.core.types import string
 from server.core.exceptions import ErrorCodes, ExceptionHandler
 
+
 class AccountService(ManageAccountUseCase):
     def __init__(self, account_repository: AccountRepository = Depends()):
         self.account_repository = account_repository
@@ -35,15 +36,17 @@ class AccountService(ManageAccountUseCase):
 
     async def find_account_by_id(self, id: string) -> Optional[AccountEntity]:
         if not ObjectId.is_valid(id):
-            raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Can not find account")
+            raise ExceptionHandler(
+                code=ErrorCodes.NOT_FOUND, msg="Can not find account"
+            )
 
         return await self.account_repository.find_one({"_id": ObjectId(id)})
 
-    async def find_accounts(self, query: FindAccountsQuery) -> Tuple[List[AccountEntity], Meta]:
+    async def find_accounts(
+        self, query: FindAccountsQuery
+    ) -> Tuple[List[AccountEntity], Meta]:
         response = await self.account_repository.find_pagination(
-            {},
-            page=query.page,
-            page_size=query.page_size
+            {}, page=query.page, page_size=query.page_size
         )
 
         return response
