@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 import redis
 
+
 @dataclass
 class RedisConnection:
     pool: Optional[redis.ConnectionPool] = None
@@ -23,5 +24,6 @@ class RedisConnection:
             print(f"Connect to Redis: {response}")
         except Exception as exception:
             print(f"Failed to connect to Redis: {exception}")
+
 
 redis_connection = RedisConnection()

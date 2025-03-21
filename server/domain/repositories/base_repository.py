@@ -19,6 +19,7 @@ from server.domain.entities.base_entity import BaseEntity
 
 T = TypeVar("T", bound=BaseEntity)
 
+
 class BaseRepository(Generic[T]):
     def __init__(self, collection: AsyncIOMotorCollection, model: Type[T]):
         self.collection = collection
@@ -100,7 +101,7 @@ class BaseRepository(Generic[T]):
         # for key, value in data.items():
         #     if "_id" in key:
         #         print(key)
-                # data[key] = str(value)
+        # data[key] = str(value)
         return self.model.model_validate(data)
 
     async def update(self, id: string, data: Dict[str, Any]) -> Optional[T]:
@@ -119,10 +120,7 @@ class BaseRepository(Generic[T]):
         time = TimeHelper.utc_timezone()
         update_data["updated_at"] = time
 
-        await self.collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": update_data}
-        )
+        await self.collection.update_one({"_id": ObjectId(id)}, {"$set": update_data})
 
         entity["id"] = id
         entity["updated_at"] = time
@@ -144,7 +142,7 @@ class BaseRepository(Generic[T]):
         return response
 
     async def delete(self, id: Any) -> Optional[T]:
-        doc = await self.collection.find_one({"_id":  ObjectId(id)})
+        doc = await self.collection.find_one({"_id": ObjectId(id)})
         if not doc:
             return None
 

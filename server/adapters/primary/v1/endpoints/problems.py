@@ -81,7 +81,7 @@ async def find_problems(
 async def fake(
     body: CreateProblemReq,
     claims: OAuthClaims = Depends(auth_middleware),
-    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     await problem_service.fake(body)
@@ -92,7 +92,7 @@ async def fake(
 async def find_problem(
     id: string,
     claims: OAuthClaims = Depends(auth_middleware),
-    _=Depends(role_middleware(required=[EnumRole.NORMAL])),
+    _=Depends(role_middleware(required=[])),
     problem_service: ProblemService = Depends(dependencies.problem_service),
 ):
     try:

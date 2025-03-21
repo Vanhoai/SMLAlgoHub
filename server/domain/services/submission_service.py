@@ -54,9 +54,7 @@ class SubmissionService(ManageSubmissionUseCases):
         if not account:
             raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Account not found.")
 
-        problem = await self.problem_repository.collection_find(
-            {"_id": ObjectId(req.problem_id)}
-        )
+        problem = await self.problem_repository.find_base(req.problem_id)
         if not problem:
             raise ExceptionHandler(code=ErrorCodes.NOT_FOUND, msg="Problem not found.")
 

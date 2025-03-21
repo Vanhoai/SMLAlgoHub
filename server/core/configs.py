@@ -26,6 +26,14 @@ class Configs(BaseSettings):
     AUTH_PROVIDER_X509_CERT_URL: string
     CLIENT_X509_CERT_URL: string
 
+    # Rabbit MQ
+    RABBITMQ_QUEUE: string
+    RABBITMQ_DEFAULT_USER: string
+    RABBITMQ_DEFAULT_PASS: string
+    RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: string
+    RABBITMQ_LOCAL_HOST_NAME: string
+    RABBITMQ_LOCAL_PORT: string
+
     # Cors
     CORS_ALLOWED_ORIGINS: string
     MAX_AGE: int = 3600

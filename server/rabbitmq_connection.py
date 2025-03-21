@@ -8,6 +8,7 @@ from server.core.types import string
 RABBIT_URL = "amqp://hinsun:hinsun@localhost:5672/"
 RABBITMQ_QUEUE = "submissions"
 
+
 @dataclass
 class RabbitMQConnection:
     connection: Optional[AbstractRobustConnection] = None
@@ -30,6 +31,9 @@ class RabbitMQConnection:
             self.connection = await connect_robust(RABBIT_URL)
             self.channel = await self.connection.channel(publisher_confirms=False)
             print("Connected to RabbitMQ")
+
+            queue = self.channel.declare_queue(queue=RABBITMQ_QUEUE, durable=True)
+
         except Exception as exception:
             print(f"Failed to connect to RabbitMQ: {exception}")
 
@@ -37,9 +41,7 @@ class RabbitMQConnection:
         await self._clear()
 
     async def send_messages(
-        self,
-        messages: string,
-        routing_key: str = RABBITMQ_QUEUE
+        self, messages: string, routing_key: str = RABBITMQ_QUEUE
     ) -> None:
         if not self.channel:
             raise RuntimeError("Not connected")
@@ -47,5 +49,6 @@ class RabbitMQConnection:
         async with self.channel.transaction():
             body = Message(body=json.dumps(messages).encode())
             await self.channel.default_exchange.publish(body, routing_key=routing_key)
+
 
 rabbitmq_connection = RabbitMQConnection()

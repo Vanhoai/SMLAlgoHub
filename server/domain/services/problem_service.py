@@ -160,7 +160,7 @@ class ProblemService(ManageProblemUseCases):
             "Find First Non-Repeating Character",
         ]
 
-        for i in range(20):
+        for i in range(5):
             # pick a random author
             author_random = random.choice(authors)
             if not author_random:
