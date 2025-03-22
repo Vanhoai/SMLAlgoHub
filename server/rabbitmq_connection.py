@@ -31,9 +31,6 @@ class RabbitMQConnection:
             self.connection = await connect_robust(RABBIT_URL)
             self.channel = await self.connection.channel(publisher_confirms=False)
             print("Connected to RabbitMQ")
-
-            queue = self.channel.declare_queue(queue=RABBITMQ_QUEUE, durable=True)
-
         except Exception as exception:
             print(f"Failed to connect to RabbitMQ: {exception}")
 

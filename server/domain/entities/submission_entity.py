@@ -1,7 +1,10 @@
 from enum import IntEnum, auto
+import judge0
+
 from server.domain.entities.base_entity import BaseEntity
 from server.core.types import string
 from server.core.helpers.time import TimeHelper
+
 
 class SubmissionLanguages(IntEnum):
     ASSEMBLY = auto()
@@ -72,6 +75,10 @@ class SubmissionLanguages(IntEnum):
     TYPESCRIPT = auto()
     VISUAL_BASIC = auto()
 
+    def to_language_alias(self) -> judge0.LanguageAlias:
+        return judge0.LanguageAlias(self.value)
+
+
 class SubmissionStatus(IntEnum):
     SUBMITTED = auto()
     PENDING = auto()
@@ -81,6 +88,7 @@ class SubmissionStatus(IntEnum):
     WRONG_ANSWER = auto()
     RUNTIME_ERROR = auto()
     COMPILE_ERROR = auto()
+
 
 class SubmissionEntity(BaseEntity):
     author_id: string
@@ -108,7 +116,7 @@ class SubmissionEntity(BaseEntity):
         language: SubmissionLanguages = SubmissionLanguages.PYTHON,
         memory: int = 0,
         time: int = 0,
-    ) -> 'SubmissionEntity':
+    ) -> "SubmissionEntity":
         return SubmissionEntity(
             id=None,
             author_id=author_id,
@@ -124,5 +132,5 @@ class SubmissionEntity(BaseEntity):
             time=time,
             created_at=TimeHelper.utc_timezone(),
             updated_at=TimeHelper.utc_timezone(),
-            deleted_at=None
+            deleted_at=None,
         )
